@@ -1,0 +1,390 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LakasTama-Takai-Adspartner</title>
+<style>
+:root {
+  --bg:#0b1020; --panel:#131b2e; --panel2:#19243a;
+  --line:#293650; --text:#edf2ff; --muted:#9ba9c4;
+  --accent:#9b8cff; --green:#75e0b2;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;
+  font-size:14px; line-height:1.6;
+}
+button,input,select,textarea { font:inherit; }
+button { cursor:pointer; }
+.app { display:flex; min-height:100vh; }
+.sidebar {
+  width:235px; padding:26px 16px; border-right:1px solid var(--line);
+  background:#0e1526; flex-shrink:0;
+}
+.brand { font-size:19px; font-weight:800; letter-spacing:-.6px; margin:0 8px 5px; }
+.brand span { color:var(--accent); }
+.subbrand { color:var(--muted); font-size:12px; margin:0 8px 30px; }
+.nav-label { color:#75839e; font-size:10px; font-weight:800; letter-spacing:1.5px; padding:0 10px; margin-bottom:8px; }
+.nav-btn {
+  display:block; width:100%; text-align:left; border:0; border-radius:9px;
+  padding:11px 12px; color:#aebbd2; background:transparent; margin:3px 0;
+}
+.nav-btn:hover,.nav-btn.active { background:#242d49; color:white; }
+.nav-btn.active { box-shadow:inset 3px 0 var(--accent); }
+.sidebar-note { margin:30px 5px 0; padding:13px; border:1px solid var(--line); border-radius:12px; color:var(--muted); font-size:12px; }
+main { min-width:0; flex:1; }
+.topbar { display:flex; justify-content:space-between; align-items:center; padding:17px 30px; border-bottom:1px solid var(--line); gap:12px; }
+.topbar small { color:var(--muted); }
+.status { color:var(--green); font-size:12px; }
+.content { max-width:1100px; margin:auto; padding:32px 30px 60px; }
+.eyebrow { text-transform:uppercase; letter-spacing:1.7px; font-size:10px; color:var(--accent); font-weight:800; }
+h1 { font-size:clamp(25px,4vw,34px); line-height:1.2; letter-spacing:-1px; margin:8px 0; }
+h2 { font-size:19px; margin:0 0 8px; }
+h3 { font-size:14px; margin:0 0 7px; }
+p { margin:5px 0 14px; }
+.muted { color:var(--muted); }
+.hero { margin-bottom:25px; }
+.grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+.grid.three { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.card { background:var(--panel); border:1px solid var(--line); border-radius:15px; padding:21px; min-width:0; }
+.card p { color:var(--muted); }
+.stat { font-size:27px; font-weight:750; margin-top:7px; }
+.stat-label { color:var(--muted); font-size:12px; }
+.iconbox { width:38px; height:38px; display:grid; place-items:center; border-radius:11px; background:#282547; font-size:18px; margin-bottom:15px; }
+.page { display:none; }
+.page.active { display:block; }
+.form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:15px; }
+.field { display:flex; flex-direction:column; gap:6px; min-width:0; }
+.field.full { grid-column:1/-1; }
+label { color:#d5def1; font-size:12px; font-weight:650; }
+input,select,textarea {
+  width:100%; padding:11px 12px; color:var(--text); background:#0c1425;
+  border:1px solid #34425e; border-radius:8px; outline:none;
+}
+input:focus,select:focus,textarea:focus { border-color:var(--accent); }
+textarea { min-height:100px; resize:vertical; }
+select option { background:#111a2b; }
+.btn {
+  padding:10px 15px; border-radius:8px; border:1px solid var(--line);
+  background:var(--panel2); color:var(--text); font-weight:700;
+}
+.btn.primary { background:var(--accent); color:#111128; border-color:var(--accent); }
+.btn:hover { filter:brightness(1.12); }
+.actions { display:flex; flex-wrap:wrap; gap:9px; margin-top:17px; }
+.result { margin-top:20px; padding:19px; background:#0c1425; border:1px solid var(--line); border-radius:12px; }
+.result:empty { display:none; }
+.result h3 { color:var(--green); margin-top:14px; }
+.result h3:first-child { margin-top:0; }
+.result ul { padding-left:21px; }
+.result li { margin:6px 0; }
+.pill { display:inline-block; border-radius:99px; background:#292446; color:#c9c0ff; padding:3px 9px; font-size:11px; margin:2px 3px 2px 0; }
+.section-head { display:flex; justify-content:space-between; align-items:center; gap:10px; margin:26px 0 12px; }
+.small { font-size:12px; }
+.footer-note { color:var(--muted); font-size:11px; margin-top:18px; }
+.saved-item { border-bottom:1px solid var(--line); padding:13px 0; }
+.saved-item:last-child { border-bottom:0; }
+.saved-item strong { display:block; }
+.saved-item button { margin-top:8px; margin-right:6px; }
+.empty { color:var(--muted); padding:15px 0; }
+.mobile-menu { display:none; }
+@media(max-width:760px) {
+  .app { display:block; }
+  .sidebar { width:100%; border-right:0; border-bottom:1px solid var(--line); padding:15px; }
+  .brand { display:inline-block; margin-bottom:0; }
+  .subbrand { display:inline; margin-left:8px; }
+  .nav-label,.sidebar-note { display:none; }
+  .nav-wrap { display:flex; overflow-x:auto; gap:5px; margin-top:13px; }
+  .nav-btn { white-space:nowrap; width:auto; padding:9px 11px; }
+  .topbar { padding:13px 18px; }
+  .content { padding:25px 17px 40px; }
+  .grid,.grid.three,.form-grid { grid-template-columns:1fr; }
+  .field.full { grid-column:auto; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">LakasTama-Takai-Ads<span>partner</span></div>
+    <div class="subbrand">Personal marketing toolkit</div>
+    <div class="nav-label">WORKSPACE</div>
+    <div class="nav-wrap">
+      <button class="nav-btn active" data-page="home">⌂ &nbsp; Overview</button>
+      <button class="nav-btn" data-page="campaign">◈ &nbsp; Campaign helper</button>
+      <button class="nav-btn" data-page="creative">✳ &nbsp; Creative lab</button>
+      <button class="nav-btn" data-page="calls">▤ &nbsp; Call assistant</button>
+      <button class="nav-btn" data-page="saved">▣ &nbsp; Saved notes</button>
+    </div>
+    <div class="sidebar-note">Your private workspace. Notes are saved in this browser on this device. Avoid storing customer secrets or sensitive account information.</div>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <strong id="topTitle">Overview</strong>
+      <span class="status">● Personal workspace</span>
+    </header>
+    <div class="content">
+
+      <section class="page active" id="home">
+        <div class="hero">
+          <div class="eyebrow">YOUR DAILY WORKSPACE</div>
+          <h1>Make every advertiser conversation count.</h1>
+          <p class="muted">Prepare smarter campaign recommendations, explore creative angles, and turn your call notes into clear follow-ups.</p>
+        </div>
+        <div class="grid three">
+          <div class="card"><div class="iconbox">◈</div><div class="stat">01</div><div class="stat-label">Campaign helper</div><p>Build a recommendation checklist based on the advertiser's goals and challenges.</p><button class="btn" data-go="campaign">Open tool →</button></div>
+          <div class="card"><div class="iconbox">✳</div><div class="stat">02</div><div class="stat-label">Creative lab</div><p>Develop different ad concepts for the advertiser's product or service.</p><button class="btn" data-go="creative">Explore ideas →</button></div>
+          <div class="card"><div class="iconbox">▤</div><div class="stat">03</div><div class="stat-label">Call assistant</div><p>Organize call notes and prepare a summary and follow-up email.</p><button class="btn" data-go="calls">Draft a follow-up →</button></div>
+        </div>
+        <div class="section-head"><h2>Suggested daily workflow</h2></div>
+        <div class="card">
+          <p> <span class="pill">1. Prepare</span> Understand the business, objective, target customer, and main challenge.</p>
+          <p> <span class="pill">2. Recommend</span> Select a few relevant tests instead of changing everything at once.</p>
+          <p> <span class="pill">3. Follow up</span> Document what was discussed, who owns each action, and when to review results.</p>
+        </div>
+        <p class="footer-note">This is an independent personal tool, not an official Meta product. It does not connect to Meta Ads Manager or inspect live campaign data.</p>
+      </section>
+
+      <section class="page" id="campaign">
+        <div class="hero"><div class="eyebrow">CAMPAIGN PLANNING</div><h1>Campaign helper</h1><p class="muted">Enter what you know about the advertiser to create a starting checklist. Verify recommendations against actual account data and current Meta features.</p></div>
+        <div class="card">
+          <div class="form-grid">
+            <div class="field"><label for="business">Business type</label><select id="business"><option>E-commerce</option><option>Real estate</option><option>Education</option><option>Healthcare or wellness</option><option>Local business</option><option>Professional services</option><option>Mobile app</option><option>Other</option></select></div>
+            <div class="field"><label for="objective">Main campaign objective</label><select id="objective"><option>Leads</option><option>Sales</option><option>Engagement or messaging</option><option>Traffic</option><option>Awareness</option><option>App promotion</option></select></div>
+            <div class="field"><label for="problem">Main challenge</label><select id="problem"><option>High cost per lead or purchase</option><option>Low lead quality</option><option>Not enough conversions</option><option>Creative fatigue</option><option>Tracking or attribution issues</option><option>Campaign stuck in learning</option><option>Slow lead follow-up</option><option>Unclear overall performance</option></select></div>
+            <div class="field"><label for="tracking">Tracking setup</label><select id="tracking"><option>Unknown</option><option>Pixel only</option><option>Pixel and Conversions API</option><option>CRM integration</option><option>App SDK</option><option>Not applicable or unknown</option></select></div>
+            <div class="field"><label for="assets">Current creative variety</label><select id="assets"><option>Unknown</option><option>One or two creatives</option><option>Three to five creatives</option><option>Six or more creatives</option></select></div>
+            <div class="field"><label for="followup">Lead follow-up process</label><select id="followup"><option>Unknown</option><option>Fast and consistent</option><option>Slow or inconsistent</option><option>No clear process</option><option>Not applicable</option></select></div>
+            <div class="field full"><label for="context">Extra context (optional)</label><textarea id="context" placeholder="Example: The advertiser sells home furniture online, uses Shopify, and reports fewer purchases this month."></textarea></div>
+          </div>
+          <div class="actions"><button class="btn primary" id="makePlan">Generate checklist</button><button class="btn" id="clearPlan">Clear</button></div>
+          <div class="result" id="planResult" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="page" id="creative">
+        <div class="hero"><div class="eyebrow">AD CONCEPT DEVELOPMENT</div><h1>Creative lab</h1><p class="muted">Generate a set of creative angles to discuss with an advertiser. These are concept prompts, not finished ads or performance guarantees.</p></div>
+        <div class="card">
+          <div class="form-grid">
+            <div class="field"><label for="product">Product or service</label><input id="product" placeholder="e.g. Online chess classes"></div>
+            <div class="field"><label for="audience">Target customer</label><input id="audience" placeholder="e.g. Parents of school-age children"></div>
+            <div class="field"><label for="creativeGoal">Campaign goal</label><select id="creativeGoal"><option>Generate leads</option><option>Drive purchases</option><option>Start conversations</option><option>Build awareness</option><option>Drive app installs</option></select></div>
+            <div class="field"><label for="format">Preferred format</label><select id="format"><option>Mix of formats</option><option>Vertical video / Reels</option><option>Static images</option><option>Carousel</option><option>Customer testimonials</option></select></div>
+            <div class="field full"><label for="sellingPoint">Main benefit or customer problem</label><textarea id="sellingPoint" placeholder="e.g. Kids learn strategic thinking with live online coaching"></textarea></div>
+          </div>
+          <div class="actions"><button class="btn primary" id="makeCreative">Generate 10 concepts</button></div>
+          <div class="result" id="creativeResult" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="page" id="calls">
+        <div class="hero"><div class="eyebrow">CALL DOCUMENTATION</div><h1>Call assistant</h1><p class="muted">Add your notes and create a readable call summary, action list, and follow-up email. Review everything before sending.</p></div>
+        <div class="card">
+          <div class="form-grid">
+            <div class="field"><label for="advertiser">Business or advertiser name</label><input id="advertiser" placeholder="e.g. Example Learning Academy"></div>
+            <div class="field"><label for="contact">Contact person's name (optional)</label><input id="contact" placeholder="e.g. Priya"></div>
+            <div class="field"><label for="callGoal">Advertiser's main goal</label><input id="callGoal" placeholder="e.g. Improve qualified leads"></div>
+            <div class="field"><label for="nextDate">Next follow-up (optional)</label><input id="nextDate" placeholder="e.g. Next Tuesday"></div>
+            <div class="field full"><label for="callNotes">Call notes</label><textarea id="callNotes" style="min-height:180px" placeholder="What did the advertiser tell you? What is working? What challenges did they mention? What did you recommend?"></textarea></div>
+          </div>
+          <div class="actions"><button class="btn primary" id="makeSummary">Create summary and email</button><button class="btn" id="saveCall">Save notes</button></div>
+          <div class="result" id="callResult" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="page" id="saved">
+        <div class="hero"><div class="eyebrow">YOUR WORKSPACE</div><h1>Saved notes</h1><p class="muted">View or delete notes saved in this browser.</p></div>
+        <div class="card"><div id="savedList"><p class="empty">Your saved notes will appear here.</p></div><div class="actions"><button class="btn" id="exportNotes">Export notes as JSON</button><button class="btn" id="deleteAll">Delete all saved notes</button></div></div>
+        <p class="footer-note">Saved notes stay in this browser's local storage. Clearing browser data or using a different device may remove or hide them. Export a backup when needed.</p>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const safe = value => String(value || "").trim();
+const escapeHTML = value => String(value).replace(/[&<>"']/g, char => ({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[char]));
+const bullets = items => "<ul>" + items.map(x => "<li>" + escapeHTML(x) + "</li>").join("") + "</ul>";
+
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(page => page.classList.toggle("active", page.id === id));
+  document.querySelectorAll("[data-page]").forEach(btn => btn.classList.toggle("active", btn.dataset.page === id));
+  const titles = {home:"Overview",campaign:"Campaign helper",creative:"Creative lab",calls:"Call assistant",saved:"Saved notes"};
+  $("topTitle").textContent = titles[id] || "Ads Partner Toolkit";
+  if (id === "saved") renderSaved();
+}
+document.querySelectorAll("[data-page]").forEach(btn => btn.addEventListener("click", () => showPage(btn.dataset.page)));
+document.querySelectorAll("[data-go]").forEach(btn => btn.addEventListener("click", () => showPage(btn.dataset.go)));
+
+function copyButton(text) {
+  return '<button class="btn" data-copy="' + encodeURIComponent(text) + '">Copy text</button>';
+}
+document.addEventListener("click", async event => {
+  const btn = event.target.closest("[data-copy]");
+  if (!btn) return;
+  try {
+    await navigator.clipboard.writeText(decodeURIComponent(btn.dataset.copy));
+    btn.textContent = "Copied!";
+    setTimeout(() => btn.textContent = "Copy text", 1500);
+  } catch {
+    const area = document.createElement("textarea");
+    area.value = decodeURIComponent(btn.dataset.copy);
+    document.body.appendChild(area);
+    area.select();
+    document.execCommand("copy");
+    area.remove();
+    btn.textContent = "Copied!";
+  }
+});
+
+$("makePlan").addEventListener("click", () => {
+  const business = $("business").value;
+  const objective = $("objective").value;
+  const problem = $("problem").value;
+  const tracking = $("tracking").value;
+  const assets = $("assets").value;
+  const followup = $("followup").value;
+  const context = safe($("context").value);
+  let recs = [];
+  recs.push("Confirm the campaign objective matches the result the business actually values: " + objective + ".");
+  if (problem.includes("cost")) recs.push("Review recent cost trends, conversion volume, audience, placements, landing page, and offer before changing budgets.");
+  if (problem === "Low lead quality") recs.push("Compare qualified leads with total leads. Review form questions, lead criteria, CRM outcomes, and whether available conversion signals can be sent back to Meta.");
+  if (problem === "Not enough conversions") recs.push("Check delivery, budget, audience size, destination experience, tracking, and conversion volume. Change one major variable at a time.");
+  if (problem === "Creative fatigue") recs.push("Test distinct concepts, hooks, demonstrations, customer questions, and formats. Evaluate results over a meaningful period.");
+  if (problem === "Tracking or attribution issues") recs.push("Verify the correct data source, event setup, domain where applicable, deduplication, and consistency with website or CRM records.");
+  if (problem === "Campaign stuck in learning") recs.push("Check recent edits, ad set fragmentation, optimization event, and conversion volume. Avoid repeated unnecessary edits; learning status alone does not prove the campaign is failing.");
+  if (problem === "Slow lead follow-up") recs.push("Map the journey from lead submission to first contact. Assign an owner, establish a response-time target, and track contact and qualification rates.");
+  if (problem === "Unclear overall performance") recs.push("Agree on a primary KPI and compare cost, conversion volume, quality, and business outcomes over the same date range.");
+  if (tracking === "Unknown" || tracking === "Not applicable or unknown") recs.push("Confirm which tracking methods are installed and whether reported conversions match the advertiser's website or CRM.");
+  if (tracking === "Pixel only") recs.push("Assess whether Conversions API could improve measurement reliability. Confirm technical feasibility and avoid duplicate events.");
+  if (tracking === "Pixel and Conversions API") recs.push("Audit event matching, event deduplication, event quality, and whether meaningful downstream outcomes are measured.");
+  if (tracking === "CRM integration") recs.push("Check whether CRM outcomes are consistently recorded and whether appropriate qualified-lead or conversion signals can be shared.");
+  if (assets === "One or two creatives" || assets === "Unknown") recs.push("Consider testing several meaningfully different creative concepts, with a mix of suitable formats. Keep tests manageable for the budget.");
+  if (followup === "Slow or inconsistent" || followup === "No clear process") recs.push("Improve lead routing, follow-up ownership, response speed, and recording of outcomes.");
+  if (objective === "Sales" && business === "E-commerce") recs.push("Review product pages, checkout friction, purchase tracking, catalog quality where relevant, and contribution margin.");
+  if (objective === "Leads") recs.push("Check the complete lead journey: ad promise, form friction, contact rate, qualification rate, and cost per qualified lead.");
+  if (objective === "Engagement or messaging") recs.push("Ensure the message destination is staffed, the conversation flow is clear, and meaningful conversations—not just clicks—are tracked.");
+  if (objective === "App promotion") recs.push("Check app event tracking, SDK or supported partner integration, install quality, and downstream actions.");
+  if (objective === "Traffic") recs.push("Review landing page views and on-site engagement, not just link clicks.");
+  if (objective === "Awareness") recs.push("Define the desired reach or awareness outcome and use consistent measurement windows.");
+  recs.push("Agree on one or two priority tests, a review date, and the KPI that will determine whether to continue, adjust, or stop.");
+  const result = '<h3>Business snapshot</h3><p>' + escapeHTML(business + " · " + objective + " · " + problem) + '</p><h3>Suggested discussion checklist</h3>' + bullets(recs) + (context ? '<h3>Additional context</h3><p>' + escapeHTML(context) + '</p>' : '') + '<p class="footer-note">These are general starting points, not an account audit. Validate each item with the advertiser’s actual data, setup, budget, and current Meta Ads options.</p>';
+  $("planResult").innerHTML = result + copyButton("Campaign helper\nBusiness: "+business+"\nObjective: "+objective+"\nChallenge: "+problem+"\n\n"+recs.map((x,i)=>(i+1)+". "+x).join("\n")+(context?"\n\nContext: "+context:""));
+});
+$("clearPlan").addEventListener("click", () => {
+  $("context").value = "";
+  $("planResult").innerHTML = "";
+});
+
+$("makeCreative").addEventListener("click", () => {
+  const product = safe($("product").value) || "the product or service";
+  const audience = safe($("audience").value) || "the target customer";
+  const goal = $("creativeGoal").value;
+  const benefit = safe($("sellingPoint").value) || "the main customer benefit";
+  const format = $("format").value;
+  const ideas = [
+    ["Problem → solution","Open with a common frustration, then show how "+product+" helps address it."],
+    ["Product demonstration","Show "+product+" in use, step by step, with the benefit made clear."],
+    ["Customer story","Structure a truthful customer story around the challenge, experience, and outcome. Get permission for any testimonial."],
+    ["Three things to know","Share three useful facts or tips related to "+product+"."],
+    ["Frequently asked question","Answer a real question "+audience+" often asks before taking action."],
+    ["Behind the scenes","Show the people, process, preparation, or care behind the product or service."],
+    ["Objection handler","Address a genuine concern such as price, time, suitability, or ease of use without making unsupported claims."],
+    ["Comparison or decision guide","Help people understand which option fits their needs. Keep comparisons fair and substantiated."],
+    ["Founder or expert explainer","Have a relevant team member explain why the service exists and who it is designed to help."],
+    ["Clear offer and next step","Present the actual offer, who it is for, and one clear call to action aligned with "+goal.toLowerCase()+"."]
+  ];
+  const content = ideas.map((idea,i)=>({title:idea[0],body:idea[1],hook:"Hook: “"+[
+    "Struggling with a common challenge?",
+    "Here is how it works in real life.",
+    "What does a real customer need to know?",
+    "Before you decide, consider these three things.",
+    "One question we hear all the time:",
+    "Here is a closer look behind the scenes.",
+    "Let's address a common concern.",
+    "Which option is right for you?",
+    "Why did we create this solution?",
+    "Here is what you need to know before getting started."
+  ][i]+"”"}));
+  $("creativeResult").innerHTML = '<h3>10 concepts for '+escapeHTML(product)+'</h3><p class="muted">Audience: '+escapeHTML(audience)+' · Goal: '+escapeHTML(goal)+' · Format: '+escapeHTML(format)+'</p>' + content.map((idea,i)=>'<div class="saved-item"><strong>'+(i+1)+'. '+escapeHTML(idea.title)+'</strong><p>'+escapeHTML(idea.body)+'</p><p class="muted small">'+escapeHTML(idea.hook)+'</p></div>').join("") + '<p class="footer-note">Creative direction: '+escapeHTML(benefit)+'. Adapt the concepts to the brand, available assets, audience, and placement. Do not invent testimonials, results, or guarantees.</p>' + copyButton("Creative concepts for "+product+"\nAudience: "+audience+"\nGoal: "+goal+"\nBenefit: "+benefit+"\n\n"+content.map((x,i)=>(i+1)+". "+x.title+"\n"+x.body+"\n"+x.hook).join("\n\n"));
+});
+
+function createCallText() {
+  const business = safe($("advertiser").value) || "the advertiser";
+  const contact = safe($("contact").value);
+  const goal = safe($("callGoal").value) || "improve advertising performance";
+  const next = safe($("nextDate").value);
+  const notes = safe($("callNotes").value);
+  if (!notes) {
+    $("callResult").innerHTML = '<p>Please enter your call notes first.</p>';
+    return null;
+  }
+  const summary = business + (contact ? " ("+contact+")" : "") + " discussed their goal of "+goal+". During the call, the advertiser shared the following: "+notes;
+  const email = "Subject: Follow-up on our Meta Ads discussion\n\nHi "+(contact || "there")+",\n\nThank you for taking the time to discuss your advertising goals with me. Based on our conversation, your main priority is "+goal+".\n\nCall summary:\n"+notes+"\n\nNext steps:\n"+(next ? "We plan to follow up "+next+". " : "")+"Please review the discussed recommendations and track the agreed performance indicators before making further changes.\n\nFeel free to reply if you have any questions. I look forward to our next discussion.\n\nBest regards";
+  return {business,summary,email,notes,goal,next,created:new Date().toLocaleString()};
+}
+$("makeSummary").addEventListener("click", () => {
+  const data = createCallText();
+  if (!data) return;
+  $("callResult").innerHTML = '<h3>Call summary</h3><p>'+escapeHTML(data.summary)+'</p>'+copyButton(data.summary)+'<h3>Follow-up email draft</h3><pre style="white-space:pre-wrap;font:inherit;color:var(--text)">'+escapeHTML(data.email)+'</pre>'+copyButton(data.email)+'<p class="footer-note">Review the summary and email for accuracy. The draft may need editing to reflect the actual discussion and confirmed commitments.</p>';
+});
+const STORAGE_KEY = "adsPartnerToolkitNotesV1";
+function getSaved() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
+  catch { return []; }
+}
+function saveAll(items) {
+  try { localStorage.setItem(STORAGE_KEY,JSON.stringify(items)); return true; }
+  catch { alert("Could not save notes. Your browser storage may be full or unavailable."); return false; }
+}
+$("saveCall").addEventListener("click", () => {
+  const data = createCallText();
+  if (!data) return;
+  const items = getSaved();
+  items.unshift({id:Date.now(),...data});
+  if (saveAll(items)) {
+    $("callResult").innerHTML = '<p style="color:var(--green)">Notes saved in this browser.</p>'+copyButton(data.summary);
+  }
+});
+function renderSaved() {
+  const items = getSaved();
+  if (!items.length) {
+    $("savedList").innerHTML = '<p class="empty">No saved notes yet. Use Call assistant and select Save notes.</p>';
+    return;
+  }
+  $("savedList").innerHTML = items.map(item => '<div class="saved-item"><strong>'+escapeHTML(item.business)+'</strong><span class="muted small">'+escapeHTML(item.created)+' · Goal: '+escapeHTML(item.goal)+'</span><p>'+escapeHTML(item.notes.slice(0,220))+(item.notes.length>220?"…":"")+'</p><button class="btn" data-view="'+item.id+'">View summary</button><button class="btn" data-remove="'+item.id+'">Delete</button><div id="note-'+item.id+'"></div></div>').join("");
+  $("savedList").querySelectorAll("[data-view]").forEach(btn => btn.addEventListener("click", () => {
+    const item = getSaved().find(x=>x.id===Number(btn.dataset.view));
+    if (item) $("note-"+item.id).innerHTML = '<p>'+escapeHTML(item.summary)+'</p>'+copyButton(item.summary)+'<p><strong>Email draft</strong></p><pre style="white-space:pre-wrap;font:inherit">'+escapeHTML(item.email)+'</pre>'+copyButton(item.email);
+  }));
+  $("savedList").querySelectorAll("[data-remove]").forEach(btn => btn.addEventListener("click", () => {
+    if (confirm("Delete this saved note?")) {
+      saveAll(getSaved().filter(x=>x.id!==Number(btn.dataset.remove)));
+      renderSaved();
+    }
+  }));
+}
+$("exportNotes").addEventListener("click", () => {
+  const data = JSON.stringify(getSaved(),null,2);
+  const blob = new Blob([data],{type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "ads-partner-notes.json"; a.click();
+  URL.revokeObjectURL(url);
+});
+$("deleteAll").addEventListener("click", () => {
+  if (confirm("Delete every saved note from this browser? Export a backup first if you need one.")) {
+    saveAll([]);
+    renderSaved();
+  }
+});
+</script>
+</body>
+</html>
